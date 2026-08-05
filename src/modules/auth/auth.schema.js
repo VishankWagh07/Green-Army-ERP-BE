@@ -1,5 +1,5 @@
 import z from 'zod';
-import { USER_ROLES } from '../../constants/auth';
+import { USER_ROLES } from '../../constants/auth.js';
 
 export const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
@@ -9,7 +9,7 @@ export const loginSchema = z.object({
 
 
 export const registerSchema = z.object({
-  role: z.enum(Objec(USER_ROLES), {
+  role: z.enum(Object.keys(USER_ROLES), {
     error: "Invalid user role",
   }),
 
@@ -31,7 +31,7 @@ export const registerSchema = z.object({
 })
 .superRefine((data, ctx) => {
   // Admin doesn't require a team
-  if (data.role !== "admin" && !data.teamId) {
+  if (data.role !== USER_ROLES.ADMIN && !data.teamId) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ["teamId"],

@@ -4,7 +4,7 @@ import cors from "cors";
 
 import { connectDb } from "./config/db.js";
 import env from "./config/env.js";
-import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
+import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 import authRoutes from "./modules/auth/auth.route.js";
 
 const app = express();
