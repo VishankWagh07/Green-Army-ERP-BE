@@ -1,10 +1,4 @@
 export class ApiError extends Error {
-  /**
-   * @param {number} statusCode - HTTP status code
-   * @param {string} code - machine-readable error code, e.g. 'NOT_FOUND'
-   * @param {string} message - human-readable message
-   * @param {any[]} [details] - optional validation error details
-   */
   constructor(statusCode, code, message, details = []) {
     super(message);
     this.statusCode = statusCode;
