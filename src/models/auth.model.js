@@ -1,7 +1,7 @@
 // src/models/user.model.js
 import { sequelize } from '../config/db.js';
 import { DataTypes } from "sequelize";
-import { ROLES } from '../constants/common.js';
+import { USER_ROLES } from '../constants/auth.js';
 
 export const User = sequelize.define(
     "User",
@@ -14,7 +14,7 @@ export const User = sequelize.define(
         },
 
         role: {
-            type: DataTypes.ENUM(Object.keys(ROLES)),
+            type: DataTypes.ENUM(Object.keys(USER_ROLES)),
             allowNull: false,
         },
 

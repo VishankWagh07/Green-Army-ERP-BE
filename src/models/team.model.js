@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
+import { sequelize } from "../config/db.js";
 
 export const Team = sequelize.define(
   "Team",
@@ -22,7 +22,6 @@ export const Team = sequelize.define(
     },
   },
   {
-    sequelize,
     tableName: "TeamMaster",
     timestamps: true,
   },
