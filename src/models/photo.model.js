@@ -1,12 +1,13 @@
 import { DataTypes } from "sequelize";
-import { PHOTO_ENTITY_TYPES } from "../constants/common";
-import { sequelize } from "../config/db";
+import { PHOTO_ENTITY_TYPES, ROLES } from "../constants/common.js";
+import { sequelize } from "../config/db.js";
 
 export const Photo = sequelize.define(
   "Photo",
   {
     photoId: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
@@ -33,7 +34,6 @@ export const Photo = sequelize.define(
     },
   },
   {
-    sequelize,
     tableName: "Photos",
     timestamps: false,
   },

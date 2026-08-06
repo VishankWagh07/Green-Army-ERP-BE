@@ -6,6 +6,7 @@ export const WateringLocation = sequelize.define(
   {
     wateringLocationId: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
@@ -51,6 +52,7 @@ export const WateringSchedule = sequelize.define(
   {
     scheduleId: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },

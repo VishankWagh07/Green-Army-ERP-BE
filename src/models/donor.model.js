@@ -6,6 +6,7 @@ export const Donor = sequelize.define(
   {
     donorId: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
@@ -61,6 +62,7 @@ export const Donation = sequelize.define(
   {
     donationId: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
