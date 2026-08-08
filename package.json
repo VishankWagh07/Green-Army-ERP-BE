@@ -15,14 +15,16 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "dev":"node src/server.js"
+    "dev": "node src/server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "connect-session-sequelize": "^8.0.6",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "jsonwebtoken": "^9.0.3",
     "mssql": "^12.7.0",
     "sequelize": "^6.37.8",
