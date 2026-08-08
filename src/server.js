@@ -8,6 +8,7 @@ import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 import authRoutes from "./modules/auth/auth.route.js";
 import photoRoutes from "./modules/photo/photo.route.js";
 import userRoutes from "./modules/user/user.route.js";
+import employeeRoutes from "./modules/employee/employee.route.js";
 import { uploadDirectory } from "./middlewares/upload.js";
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/uploads', express.static(uploadDirectory));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/photos', photoRoutes);
+app.use('/api/v1/employees', employeeRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

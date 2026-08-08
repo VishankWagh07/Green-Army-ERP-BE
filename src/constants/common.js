@@ -1,3 +1,4 @@
+import { USER_ROLES } from "./auth.js";
 
 export const PHOTO_ENTITY_TYPES = {
     PLANTATION: 'PLANTATION',
@@ -25,3 +26,5 @@ export const ATTENDANCE_STATUS = {
     Holiday: 'Holiday',
     "Weekly Off": 'Weekly Off',
 }
+
+export const PRIVILEGED_ROLES = [USER_ROLES.ADMIN, USER_ROLES.TEAM_MANAGER];
