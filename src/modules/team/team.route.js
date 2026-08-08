@@ -2,8 +2,7 @@ import express from "express";
 import asyncHandler from "../../middlewares/asyncHandler.js";
 import { validate } from "../../middlewares/validate.js";
 import { teamIdSchema, teamNameSchema } from "./team.schema.js";
-import { authenticate } from "../../middlewares/authenticate.js";
-import { authorize } from "../../middlewares/authorize.js";
+import { authenticate, authorize } from "../../middlewares/auth.js";
 import { createTeamController, deleteTeamController, getTeamsController, updateTeamController } from "./team.controller.js";
 import { USER_ROLES } from "../../constants/auth.js";
 

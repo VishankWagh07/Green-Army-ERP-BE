@@ -3,8 +3,8 @@ import express from "express";
 import { loginController, logoutController, refreshController, registerController } from "./auth.controller.js";
 import { validate } from "../../middlewares/validate.js";
 import asyncHandler from "../../middlewares/asyncHandler.js";
-import { authenticate } from "../../middlewares/authenticate.js";
-import { authorize } from "../../middlewares/authorize.js";
+import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/auth.js";
 import { loginSchema, registerSchema } from "./auth.schema.js";
 
 const router = express.Router();
