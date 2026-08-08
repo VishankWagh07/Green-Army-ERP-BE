@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
+import { sequelize } from "../config/db.js";
 
 export const Donor = sequelize.define(
   "Donor",
@@ -19,6 +19,9 @@ export const Donor = sequelize.define(
     },
     address: {
       type: DataTypes.STRING(300),
+    },
+    panNumber: {
+      type: DataTypes.STRING(10),
     },
     dateOfBirth: {
       type: DataTypes.DATE,
