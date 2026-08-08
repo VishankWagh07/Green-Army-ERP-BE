@@ -28,28 +28,6 @@ export const login = async (email, password) => {
         throw ApiError.unauthorized('Invalid credentials');
     }
 
-    req.session.regenerate((error) => {
-        if (error) {
-            return next(error);
-        }
-
-        req.session.userId = user.userId;
-
-        req.session.createdAt = Date.now();
-
-        req.session.absoluteExpiresAt = Date.now() + THIRTY_DAYS;
-
-        req.session.save((error) => {
-            if (error) {
-                return next(error);
-            }
-
-            // return res.status(200).json({
-            //     message: "Login successful"
-            // });
-        });
-    });
-
     return {
         user: { userId: user.userId, fullName: user.fullName, email: user.email, role: user.role }
     }
@@ -69,31 +47,12 @@ export const register = async (payload) => {
     if (user?.mobileNumber == payload.mobileNumber) throw ApiError.conflict('Mobile Number already exists');
 
     const passwordHash = await bcrypt.hash(payload.password, 12);
+console.log("User cret");
 
     const newUser = await User.create({ ...payload, passwordHash });
 
-    req.session.regenerate((error) => {
-        if (error) {
-            return next(error);
-        }
-
-        req.session.userId = user.userId;
-
-        req.session.absoluteExpiresAt = Date.now() + THIRTY_DAYS;
-
-        req.session.save((error) => {
-            if (error) {
-                return next(error);
-            }
-
-            // return res.status(200).json({
-            //     message: "Register successful"
-            // });
-        });
-    });
-
     return {
-        user: { userId: user.userId, fullName: newUser.fullName, email: newUser.email, role: newUser.role }
+        user: { userId: newUser.userId, fullName: newUser.fullName, email: newUser.email, role: newUser.role }
     }
 }
 

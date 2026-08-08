@@ -1,6 +1,6 @@
 import express from "express";
 
-import { loginController, logoutController, refreshController, registerController } from "./auth.controller.js";
+import { loginController, logoutController, registerController } from "./auth.controller.js";
 import { validate } from "../../middlewares/validate.js";
 import asyncHandler from "../../middlewares/asyncHandler.js";
 import { loginSchema, registerSchema } from "./auth.schema.js";

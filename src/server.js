@@ -8,7 +8,11 @@ import env from "./config/env.js";
 import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 import authRoutes from "./modules/auth/auth.route.js";
 import sessionStore from "./config/session.js";
-import { THIRTY_DAYS } from "./constants/common.js";
+import { SEVEN_DAYS, THIRTY_DAYS } from "./constants/common.js";
+import photoRoutes from "./modules/photo/photo.route.js";
+import userRoutes from "./modules/user/user.route.js";
+import teamRoutes from "./modules/team/team.route.js";
+import { uploadDirectory } from "./middlewares/upload.js";
 
 const app = express();
 
@@ -22,15 +26,22 @@ app.use(session({
     secret: 'session_cookie_secret_key',
     resave: false,
     saveUninitialized: false,
+    rolling: true, // Crucial: Resets the 7-day idle cookie on every user request
     cookie: {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: THIRTY_DAYS
+        maxAge: SEVEN_DAYS
     }
 }))
 
+// An uploaded photo is publicly available at `/uploads/...`
+app.use('/uploads', express.static(uploadDirectory));
+
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/teams', teamRoutes);
+app.use('/api/v1/photos', photoRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

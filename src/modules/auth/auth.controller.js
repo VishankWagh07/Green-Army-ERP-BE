@@ -1,40 +1,79 @@
-import { REFRESH_COOKIE_OPTIONS } from "../../constants/auth.js";
+import { THIRTY_DAYS } from "../../constants/common.js";
+import { ApiError } from "../../utils/ApiError.js";
 import { sendSuccess } from "../../utils/ApiResponse.js";
-import { login, refresh, register } from "./auth.service.js";
+import { login, register } from "./auth.service.js";
 
-// login controller
-export const loginController = async (req, res) => {
-  const { email, password } = req.body;
-  const { user } = await login(email, password);
-  sendSuccess(res, { data: { user } });
-}
+const persistSession = (req, user) => {
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((error) => {
+      if (error) {
+        return reject(ApiError.internal("Failed to regenerate session"));
+      }
 
-// rgister controller
-export const registerController = async (req, res) => {
-  const { user } = await register(req.body);
-  sendSuccess(res, { data: { user } });
-}
+      req.session.userId = user.userId;
+      req.session.absoluteExpiresAt = new Date(Date.now() + THIRTY_DAYS);
 
-// logout controller
-export const logoutController = async (req, res) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return next(error);
-    }
+      req.session.save((saveError) => {
+        if (saveError) {
+          console.log("sv er",saveError);
+          
+          return reject(ApiError.internal("Failed to save session"));
+        }
 
-    res.clearCookie("connect.sid");
-
-    return res.status(200).json({
-      message: "Logout successful"
+        resolve();
+      });
     });
   });
-  
-  sendSuccess(res, { data: { loggedOut: true } });
-}
+};
+
+const destroySession = (req) => {
+  return new Promise((resolve, reject) => {
+    req.session.destroy((error) => {
+      if (error) {
+        return reject(ApiError.internal("Failed to destroy session"));
+      }
+
+      resolve();
+    });
+  });
+};
+
+// login controller
+export const loginController = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const { user } = await login(email, password);
+    await persistSession(req, user);
+
+    return sendSuccess(res, { data: { user } });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// register controller
+export const registerController = async (req, res, next) => {
+  try {
+    const { user } = await register(req.body);
+    await persistSession(req, user);
+
+    return sendSuccess(res, { data: { user } });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// logout controller
+export const logoutController = async (req, res, next) => {
+  try {
+    await destroySession(req);
+    res.clearCookie("connect.sid");
+
+    return sendSuccess(res, { data: { loggedOut: true } });
+  } catch (error) {
+    return next(error);
+  }
+};
 
 // refresh controller
-// export const refreshController = async (req, res) => {
-//   const {refreshToken} = req.body;
-//   const { accessToken } = await refresh(refreshToken);
-//   sendSuccess(res, { data: { accessToken } });
-// }
+// export const refreshController = async (req, res) => {//   const {refreshToken} = req.body;//   const { accessToken } = await refresh(refreshToken);//   sendSuccess(res, { data: { accessToken } });// }
