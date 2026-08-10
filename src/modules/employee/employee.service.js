@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { Attendance, EmployeeDailyLog } from '../../models/employee.model.js';
 import { ApiError } from '../../utils/ApiError.js';
-import { nowTimeOnly, todayDateOnly } from '../../utils/timeHelper.js';
+import { nowTimeOnly, nowDateTime, todayDateOnly } from '../../utils/timeHelper.js';
 import { User } from '../../models/auth.model.js';
 
 // ATTENDANCE
@@ -62,30 +62,41 @@ export async function updateAttendance(attendanceId, payload) {
 
 // DAILY LOGS
 
-export async function dailyLogsList(userId) {
-    const logs = await EmployeeDailyLog.findAll({
-        where: { userId }
-    });
-
-    return logs;
-}
-
 export async function addDailyLog(userId, payload) {
     const user = await User.findByPk(userId);
     if (!user) throw ApiError.notFound(`Employee ${userId} not found`);
 
-    const logDate = todayDateOnly();
+    const logDate = nowDateTime();
 
     const log = await EmployeeDailyLog.create({ userId, logDate, ...payload });
 
     return log;
 }
 
-export async function latestLog(userId) {
-    const log = await EmployeeDailyLog.findOne({
-        where: { userId },
-        order: [['logDate', 'DESC']],
-    });
-    if (!log) throw ApiError.notFound(`No location logged yet for employee ${userId}`);
-    return log;
+
+export async function logHistory(userId, date) {
+    const where = { userId };
+    if (date) {
+        where.logDate = { [Op.between]: [new Date(`${date}T00:00:00`), new Date(`${date}T23:59:59.999`)] };
+    }
+    const logs = EmployeeDailyLog.findAll({ where, order: [['logDate', 'DESC']] });
+
+    return logs;
 }
+
+    // export async function dailyLogsList(userId) {
+    //     const logs = await EmployeeDailyLog.findAll({
+    //         where: { userId }
+    //     });
+    
+    //     return logs;
+    // }
+    
+    // export async function latestLog(userId) {
+    //     const log = await EmployeeDailyLog.findOne({
+    //         where: { userId },
+    //         order: [['logDate', 'DESC']],
+    //     });
+    //     if (!log) throw ApiError.notFound(`No location logged yet for employee ${userId}`);
+    //     return log;
+    // }

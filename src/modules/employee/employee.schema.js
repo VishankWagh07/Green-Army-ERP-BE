@@ -31,14 +31,10 @@ export const idParamSchema = z.object({
 
 export const dailyLogSchema = z.object({
     locationName: z.string().trim().max(150),
-    goodleMapLink: z.string().trim().max(225),
+    googleMapLink: z.string().trim().max(225),
     description: z.string().max(500),
 });
 
-export const dailyLogQuerySchema = z.object({
-    page: z.coerce.number().int().positive().default(1),
-    limit: z.coerce.number().int().positive().max(100).default(20),
-    userId: z.coerce.number().int().positive().optional(),
-    from: z.string().date().optional(),
-    to: z.string().date().optional(),
-})
+export const historyQuerySchema = z.object({
+  date: z.string().date().optional(),
+});

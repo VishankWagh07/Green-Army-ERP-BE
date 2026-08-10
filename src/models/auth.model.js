@@ -63,17 +63,6 @@ export const User = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
-
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
   },
   {
     tableName: "UserMaster",

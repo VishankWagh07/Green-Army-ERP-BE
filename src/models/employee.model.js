@@ -20,7 +20,7 @@ export const EmployeeDailyLog = sequelize.define(
       },
 
       logDate: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false,
       },
 
