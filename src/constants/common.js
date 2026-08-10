@@ -19,3 +19,6 @@ export const ATTENDANCE_STATUS = {
     Holiday: 'Holiday',
     "Weekly Off": 'Weekly Off',
 }
+
+export const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+export const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
