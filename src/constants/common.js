@@ -6,12 +6,6 @@ export const PHOTO_ENTITY_TYPES = {
     DONATION_STICKER: 'DONATION_STICKER'
 }
 
-export const ROLES = {
-    ADMIN: 'ADMIN',
-    TEAM_MANAGER: 'TEAM_MANAGER',
-    EMPLOYEE: 'EMPLOYEE'
-}
-
 export const STOCK_LOG_REFS = {
 PLANTATION: 'PLANTATION',
 DONATION: 'DONATION',
@@ -28,3 +22,6 @@ export const ATTENDANCE_STATUS = {
 }
 
 export const PRIVILEGED_ROLES = [USER_ROLES.ADMIN, USER_ROLES.TEAM_MANAGER];
+
+export const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+export const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;

@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
-import { PHOTO_ENTITY_TYPES, ROLES } from "../constants/common.js";
+import { PHOTO_ENTITY_TYPES } from "../constants/common.js";
 import { sequelize } from "../config/db.js";
+import { USER_ROLES } from "../constants/auth.js";
 
 export const Photo = sequelize.define(
   "Photo",
@@ -13,7 +14,7 @@ export const Photo = sequelize.define(
     },
     entityType: {
       type: DataTypes.ENUM(...Object.values(PHOTO_ENTITY_TYPES)),
-      defaultValue: ROLES.EMPLOYEE,
+      defaultValue: USER_ROLES.EMPLOYEE,
       allowNull: false,
     },
     entityId: {
