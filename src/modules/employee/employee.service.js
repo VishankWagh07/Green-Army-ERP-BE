@@ -3,12 +3,48 @@ import { Attendance, EmployeeDailyLog } from '../../models/employee.model.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { nowTimeOnly, nowDateTime, todayDateOnly } from '../../utils/timeHelper.js';
 import { User } from '../../models/auth.model.js';
+import { sequelize } from '../../config/db.js';
+
+function getStatusCounts(rows) {
+   const statusCounts = {
+        present: 0,
+        absent: 0,
+        halfDay: 0,
+        leave: 0,
+        holiday: 0,
+        weeklyOff: 0,
+    };
+
+    for (const row of rows) {
+        switch (row.status) {
+            case "Present":
+                statusCounts.present++;
+                break;
+            case "Absent":
+                statusCounts.absent++;
+                break;
+            case "Half Day":
+                statusCounts.halfDay++;
+                break;
+            case "Leave":
+                statusCounts.leave++;
+                break;
+            case "Holiday":
+                statusCounts.holiday++;
+                break;
+            case "Weekly Off":
+                statusCounts.weeklyOff++;
+                break;
+        }
+    } 
+    return statusCounts;
+}
 
 // ATTENDANCE
 
-export async function attendanceList({ page, limit, employeeId, from, to }) {
+export async function attendanceList({ page, limit, userId, from, to }) {
     const where = {};
-    if (employeeId) where.employeeId = employeeId;
+    if (userId) where.userId = userId;
     if (from || to) {
         where.attendanceDate = {};
         if (from) where.attendanceDate[Op.gte] = from;
@@ -22,7 +58,7 @@ export async function attendanceList({ page, limit, employeeId, from, to }) {
         offset: (page - 1) * limit,
     });
 
-    return { data: rows, total: count };
+    return { data: rows, total: count, statusCounts:getStatusCounts(rows) };
 }
 
 export async function checkIn(userId) {

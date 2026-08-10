@@ -2,7 +2,7 @@ import express from "express";
 
 import { validate } from "../../middlewares/validate.js";
 import asyncHandler from "../../middlewares/asyncHandler.js";
-import { dailyLogSchema, historyQuerySchema, idParamSchema, typeParamSchema, updateAttendanceSchema, userIdParamSchema } from "./employee.schema.js";
+import { attendanceQuerySchema, dailyLogSchema, historyQuerySchema, idParamSchema, typeParamSchema, updateAttendanceSchema, userIdParamSchema } from "./employee.schema.js";
 import { addDailyLogController, attendanceController, checkInOutController, logHistoryController, updateAttendanceController } from "./employee.controller.js";
 import { PRIVILEGED_ROLES } from "../../constants/common.js";
 import { authenticate, authorize } from "../../middlewares/auth.js";
@@ -15,7 +15,7 @@ router.use(authenticate);
 
 router.get(
     '/attendance/list/:userId',
-    validate({ params: userIdParamSchema }),
+    validate({ params: userIdParamSchema, query:attendanceQuerySchema }),
     asyncHandler(attendanceController)
 );
 

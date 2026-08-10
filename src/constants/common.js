@@ -1,5 +1,10 @@
 import { USER_ROLES } from "./auth.js";
 
+export const STOCK_TYPES = {
+    SAPLING:"SAPLING",
+    GUARD:"GUARD",
+}
+
 export const PHOTO_ENTITY_TYPES = {
     PLANTATION: 'PLANTATION',
     EMPLOYEE_DAILY_LOG: 'EMPLOYEE_DAILY_LOG',
@@ -7,8 +12,8 @@ export const PHOTO_ENTITY_TYPES = {
 }
 
 export const STOCK_LOG_REFS = {
-PLANTATION: 'PLANTATION',
-DONATION: 'DONATION',
+    PLANTATION: 'PLANTATION',
+    DONATION: 'DONATION',
     DAMAGE: 'DAMAGE'
 }
 

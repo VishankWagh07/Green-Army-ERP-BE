@@ -7,11 +7,17 @@ import { addDailyLog, attendanceList, checkIn, checkOut, logHistory, updateAtten
 // attendance controller
 export const attendanceController = async (req, res) => {
     const isPrivileged = PRIVILEGED_ROLES.includes(req.user.role);
-    const employeeId = isPrivileged ? req.query.employeeId : req.user.userId;
+    const userId = isPrivileged ? req.params.userId : req.user.userId;
     const { page, limit } = req.query;
 
-    const { data, total } = await attendanceList({ ...req.query, employeeId });
-    sendSuccess(res, { data, meta: { page, limit, total } });
+    const { data, total, statusCounts } = await attendanceList({ ...req.query, userId });
+    sendSuccess(res, { 
+        data:{
+            attendance:data,
+            statusCounts
+        },
+        meta: { page, limit, total } 
+    });
 }
 
 // check in out controller

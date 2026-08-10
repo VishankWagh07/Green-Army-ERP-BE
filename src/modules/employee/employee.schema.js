@@ -12,7 +12,7 @@ export const typeParamSchema = z.object({
 export const attendanceQuerySchema = z.object({
     page: z.coerce.number().int().positive().default(1),
     limit: z.coerce.number().int().positive().max(100).default(20),
-    userId: z.coerce.number().int().positive().optional(),
+    // userId: z.coerce.number().int().positive().optional(),
     from: z.string().date().optional(),
     to: z.string().date().optional(),
 })
