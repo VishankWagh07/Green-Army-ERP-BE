@@ -2,20 +2,26 @@
 
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db";
-import { STOCK_LOG_REFS } from "../constants/common";
+import { STOCK_LOG_REFS, STOCK_TYPES } from "../constants/common";
 
-  export const Nursery = sequelize.define(
-    "Nursery",
+  export const Stock = sequelize.define(
+    "Stock",
     {
-      saplingId: {
+      stockId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
 
-      treeName: {
+      stockName: {
         type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
+      },
+
+      stockType: {
+        type: DataTypes.ENUM(...Object.values(STOCK_TYPES)),
         allowNull: false,
         unique: true,
       },
@@ -44,15 +50,15 @@ import { STOCK_LOG_REFS } from "../constants/common";
       },
     },
     {
-      tableName: "Nursery",
+      tableName: "Stock",
       timestamps: true,
       freezeTableName: true,
     }
   );
 
-  Nursery.associate = (models) => {
-    Nursery.hasMany(models.StockLog, {
-      foreignKey: "saplingId",
+  Stock.associate = (models) => {
+    Stock.hasMany(models.StockLog, {
+      foreignKey: "stockId",
       as: "stockLogs",
     });
   };
@@ -68,7 +74,7 @@ import { STOCK_LOG_REFS } from "../constants/common";
         allowNull: false,
       },
 
-      saplingId: {
+      stockId: {
         type: DataTypes.UUID,
         allowNull: false,
       },
@@ -84,6 +90,12 @@ import { STOCK_LOG_REFS } from "../constants/common";
       quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+
+      amount: {
+        type: DataTypes.NUMBER,
+        allowNull:false,
+        defaultValue: 0,
       },
 
       referenceType: {

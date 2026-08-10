@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
+import { PAYMENT_STATUS } from "../constants/common.js";
 
 export const Donor = sequelize.define(
   "Donor",
@@ -31,6 +32,16 @@ export const Donor = sequelize.define(
     },
     assignedUserId: {
       type: DataTypes.UUID,
+    },
+    treeGuardsProvided: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    saplingsProvided: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
     isActive: {
       type: DataTypes.BOOLEAN(),
@@ -77,6 +88,10 @@ export const Donation = sequelize.define(
       type: DataTypes.DECIMAL(2),
       allowNull: false,
     },
+    availableAmount: {
+      type: DataTypes.DECIMAL(2),
+      allowNull: false,
+    },
     donationDate: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -90,18 +105,12 @@ export const Donation = sequelize.define(
       type: DataTypes.STRING(50),
     },
     paymentStatus: {
-      type: DataTypes.ENUM('Pending','Completed'),
-      defaultValue: 'Pending',
-      allowNull: false,
-    },
-    plantationStatus: {
-      type: DataTypes.ENUM('Pending','Completed'),
-      defaultValue: 'Pending',
+      type: DataTypes.ENUM(...Object.values(PAYMENT_STATUS)),
+      defaultValue: PAYMENT_STATUS.Pending,
       allowNull: false,
     },
   },
   {
-    sequelize,
     tableName: "Donations",
     timestamps: true,
   },
