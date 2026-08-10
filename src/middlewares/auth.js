@@ -8,10 +8,9 @@ export const authenticate = async (req, res, next) => {
   if (!req.session?.userId) {
     next(ApiError.unauthorized("Please log in first."));
   }
-console.log("rq ss",req.session);
 
   try {
-    // absolute expiry
+    // absolute expiry -> clear session
     if (
       !req.session.absoluteExpiresAt ||
       new Date(Date.now()).getTime() >= new Date(req.session.absoluteExpiresAt).getTime()

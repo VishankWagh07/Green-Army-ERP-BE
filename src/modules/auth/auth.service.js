@@ -47,7 +47,6 @@ export const register = async (payload) => {
     if (user?.mobileNumber == payload.mobileNumber) throw ApiError.conflict('Mobile Number already exists');
 
     const passwordHash = await bcrypt.hash(payload.password, 12);
-console.log("User cret");
 
     const newUser = await User.create({ ...payload, passwordHash });
 

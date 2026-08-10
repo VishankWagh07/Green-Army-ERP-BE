@@ -19,7 +19,7 @@ const sessionStore = new SequelizeStore({
     modelKey: SessionModel.name,
     checkExpirationInterval: 15 * 60 * 1000, // Clean up expired database records every 15 mins
     expiration: SEVEN_DAYS, // Idle timeout: Sessions inactive for 7 days will expire
-    extendDefaultFields,
+    extendDefaultFields, // extra fields to be added to session
 });
 
 export default sessionStore;

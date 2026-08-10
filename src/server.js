@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(session({
     store:sessionStore,
-    secret: 'session_cookie_secret_key',
+    secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     rolling: true, // Crucial: Resets the 7-day idle cookie on every user request
@@ -31,7 +31,7 @@ app.use(session({
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: SEVEN_DAYS
+        maxAge: SEVEN_DAYS // rolling refreshes the cookie for each request
     }
 }))
 
@@ -39,7 +39,7 @@ app.use(session({
 app.use('/uploads', express.static(uploadDirectory));
 
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/teams', teamRoutes);
 app.use('/api/v1/photos', photoRoutes);
 
