@@ -1,4 +1,3 @@
-import { ApiError } from "../../utils/ApiError.js";
 import { sendSuccess } from "../../utils/ApiResponse.js";
 import { deleteUser, getUserById, getUsers, updateUser } from "./user.service.js";
 
@@ -16,12 +15,12 @@ export const getUserByIdController = async (req, res) => {
 
 // update user by id controller
 export const updateUserController = async (req, res) => {
-    await updateUser(req.params.userId, req.body);
-    sendSuccess(res, { data: { updatedUser:true } });
+    const user = await updateUser(req.params.userId, req.body);
+    sendSuccess(res, { data: user });
 }
 
 // delete user controller
 export const deleteUserController = async (req, res) => {
-    await deleteUser(req.params.userId);
-    sendSuccess(res, { data: { deletedUser:true } });
+    const user = await deleteUser(req.params.userId);
+    sendSuccess(res, { data: user });
 }

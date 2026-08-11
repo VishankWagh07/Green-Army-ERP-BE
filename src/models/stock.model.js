@@ -1,8 +1,54 @@
-// src/models/nursery.model.js
-
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db";
-import { STOCK_LOG_REFS, STOCK_TYPES } from "../constants/common";
+import { STOCK_TYPES } from "../constants/common";
+
+export const StockVariant = sequelize.define(
+  "StockVariant",
+  {
+    variantId: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
+
+    type: {
+      type: DataTypes.ENUM(...Object.values(STOCK_TYPES)),
+      allowNull: false,
+      defaultValue: "SAPLING"
+    },
+
+    variantName: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
+    },
+
+    unitPrice: {
+      type: DataTypes.DECIMAL(12, 2),
+      allowNull: false,
+    },
+
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+  },
+  {
+    tableName: "StockVariants",
+    timestamps: true,
+    freezeTableName: true,
+  }
+);
+
+StockVariant.associate = (models) => {
+  StockVariant.hasMany(models.Stock, {
+    foreignKey: "variantId",
+    as: "stocks",
+  });
+};
+
 
 export const Stock = sequelize.define(
   "Stock",
@@ -14,28 +60,24 @@ export const Stock = sequelize.define(
       allowNull: false,
     },
 
-    stockName: {
-      type: DataTypes.STRING(100),
+    donationId: {
+      type: DataTypes.UUID,
       allowNull: false,
-      unique: true,
     },
 
-    stockType: {
-      type: DataTypes.ENUM(...Object.values(STOCK_TYPES)),
+    amount: {
+      type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
-      unique: true,
+    },
+
+    variantId: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
 
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
-    },
-
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
     },
   },
   {
@@ -46,20 +88,35 @@ export const Stock = sequelize.define(
 );
 
 Stock.associate = (models) => {
-  Stock.hasMany(models.StockLog, {
+  Stock.belongsTo(models.Donation, {
+    foreignKey: "donationId",
+    as: "donation",
+  });
+
+  Stock.belongsTo(models.StockVariant, {
+    foreignKey: "variantId",
+    as: "variant",
+  });
+
+  Stock.hasMany(models.PlantationStockUsage, {
     foreignKey: "stockId",
-    as: "stockLogs",
+    as: "plantationUsages",
   });
 };
 
 
-export const StockLog = sequelize.define(
-  "StockLog",
+export const PlantationStockUsage = sequelize.define(
+  "PlantationStockUsage",
   {
-    logId: {
+    usageId: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      allowNull: false,
+    },
+
+    plantationId: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
 
@@ -68,74 +125,31 @@ export const StockLog = sequelize.define(
       allowNull: false,
     },
 
-    type: {
-      type: DataTypes.STRING(10),
-      allowNull: true,
-      validate: {
-        isIn: [["IN", "OUT"]],
-      },
+    amount: {
+      type: DataTypes.DECIMAL(12, 2),
+      allowNull: false,
     },
 
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    amountSpent: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-      defaultValue: 0,
-    },
-
-    referenceType: {
-      type: DataTypes.STRING(20),
-      allowNull: true,
-      validate: {
-        isIn: [Object.keys(STOCK_LOG_REFS)],
-      },
-    },
-
-    referenceId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-
-    logDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
-
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
-    tableName: "StockLogs",
-    timestamps: false,
+    tableName: "PlantationStockUsage",
+    timestamps: true,
     freezeTableName: true,
   }
 );
 
-StockLog.associate = (models) => {
-  // Stock log belongs to a stock
-  StockLog.belongsTo(models.Stock, {
-    foreignKey: "stockId",
-    as: "stock",
-  });
-
-  // Optional polymorphic association to Plantation
-  StockLog.belongsTo(models.Plantation, {
-    foreignKey: "referenceId",
-    constraints: false,
+PlantationStockUsage.associate = (models) => {
+  PlantationStockUsage.belongsTo(models.Plantation, {
+    foreignKey: "plantationId",
     as: "plantation",
   });
 
-  // Optional polymorphic association to Donation
-  StockLog.belongsTo(models.Donation, {
-    foreignKey: "referenceId",
-    constraints: false,
-    as: "donation",
+  PlantationStockUsage.belongsTo(models.Stock, {
+    foreignKey: "stockId",
+    as: "stock",
   });
 };
