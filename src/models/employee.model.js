@@ -1,8 +1,8 @@
 // src/models/employeeDailyLog.model.js
 
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
-import { ATTENDANCE_STATUS } from "../constants/common";
+import { sequelize } from "../config/db.js";
+import { ATTENDANCE_STATUS } from "../constants/common.js";
 
 export const EmployeeDailyLog = sequelize.define(
     "EmployeeDailyLog",

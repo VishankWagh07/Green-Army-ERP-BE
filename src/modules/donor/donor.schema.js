@@ -37,6 +37,8 @@ export const donorIdSchema = z.object({
   donorId: z.uuidv4(),
 });
 
+export const donorIdOptionalSchema = donorIdSchema.partial();
+
 export const donorFilterSchema = z.object({
   donorId: z.uuidv4().optional(),
   donationGte: z.string().optional(),

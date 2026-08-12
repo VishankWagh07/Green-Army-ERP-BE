@@ -42,8 +42,7 @@ export const Photo = sequelize.define(
 
 Photo.associate = (models) => {
   Photo.belongsTo(models.User, {
-    foreignKey: "userId",
-    as: "uploadedBy",
+    foreignKey: "uploadedBy",
   });
 };
 

@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
+import { sequelize } from "../config/db.js";
 
 export const WateringLocation = sequelize.define(
   "WateringLocation",
@@ -14,35 +14,29 @@ export const WateringLocation = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    locationName: {
-      type: DataTypes.STRING(300),
-      allowNull: false,
-    },
-    googleMapsLink: {
-      type: DataTypes.STRING(500),
-    },
     frequencyDays: {
-      type: DataTypes.NUMBER(),
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     isActive: {
-      type: DataTypes.BOOLEAN(),
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
   },
   {
-    sequelize,
     tableName: "WateringLocations",
     timestamps: true,
   },
 );
 
 WateringLocation.associate = (models) => {
-    WateringLocation.belongsTo(models.Plantation, {
-      as: "plantation",
-    });
+  WateringLocation.belongsTo(models.Plantation, {
+    foreignKey: "plantationId",
+    as: "plantation",
+  });
   WateringLocation.hasMany(models.WateringSchedule, {
+    foreignKey: "wateringLocationId",
     as: "wateringSchedules",
   });
 };
@@ -68,29 +62,31 @@ export const WateringSchedule = sequelize.define(
       type: DataTypes.UUID,
     },
     reminderTime: {
-      type: DataTypes.TIME(),
+      type: DataTypes.TIME,
     },
     isCompleted: {
-      type: DataTypes.BOOLEAN(),
+      type: DataTypes.BOOLEAN,
       defaultValue: 0,
       allowNull: false,
     },
     completedAt: {
-      type: DataTypes.DATE(),
+      type: DataTypes.DATE,
+      defaultValue: null,
     },
     notes: {
       type: DataTypes.STRING(300),
     },
   },
   {
-    sequelize,
     tableName: "WateringSchedules",
     timestamps: true,
   },
 );
 
-WateringSchedule.associate = (models) => {
+
+WateringSchedule.associate = (models) => {  
   WateringSchedule.belongsTo(models.WateringLocation, {
+    foreignKey: "wateringLocationId",
     as: "wateringLocation",
   });
   WateringSchedule.belongsTo(models.User, {
@@ -98,3 +94,15 @@ WateringSchedule.associate = (models) => {
     as: "assignedUser",
   });
 };
+//   const models = {
+//     WateringLocation,
+//     WateringSchedule,
+//   };
+
+// // 2. Loop through the object and execute associate methods
+// Object.keys(models).forEach((modelName) => {
+//   if (models[modelName].associate) {
+//     models[modelName].associate(models);
+//   }
+// });
+

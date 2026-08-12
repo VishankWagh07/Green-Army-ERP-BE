@@ -1,8 +1,8 @@
 // src/models/nursery.model.js
 
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
-import { STOCK_LOG_REFS, STOCK_TYPES } from "../constants/common";
+import { sequelize } from "../config/db.js";
+import { STOCK_LOG_REFS, STOCK_TYPES } from "../constants/common.js";
 
   export const Stock = sequelize.define(
     "Stock",
