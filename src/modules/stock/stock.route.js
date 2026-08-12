@@ -1,24 +1,24 @@
 import express from "express";
-import { USER_ROLES } from "../../constants/auth";
-import { authenticate, authorize } from "../../middlewares/auth";
-import asyncHandler from "../../middlewares/asyncHandler";
-import { validate } from "../../middlewares/validate";
-import { idParamSchema, stockLogSchema, stockLogsQuerySchema, stockSchema, stockUpdateSchema, stockVariantSchema, stockVariantUpdateSchema } from "./stock.schema";
-import { addStockVariantController, deleteStockVariantController, getStockVariantController, updateStockVariantController } from "./stock.controller";
+import { USER_ROLES } from "../../constants/auth.js";
+import { authenticate, authorize } from "../../middlewares/auth.js";
+import asyncHandler from "../../middlewares/asyncHandler.js";
+import { validate } from "../../middlewares/validate.js";
+import { idParamSchema, stockSchema, stockUpdateSchema, stockVariantSchema, stockVariantUpdateSchema, variantIdParamSchema } from "./stock.schema.js";
+import { addStockController, addStockVariantController, deleteStockVariantController, getStockController, getStockVariantsController, updateStockController, updateStockVariantController } from "./stock.controller.js";
 
 const router = express.Router();
 
 // STOCK_VARIANT
 
 router.get(
-    '/',
+    '/variants',
     authenticate,
     authorize([USER_ROLES.ADMIN]),
-    asyncHandler(getStockVariantController)
+    asyncHandler(getStockVariantsController)
 );
 
 router.post(
-    '/',
+    '/variants',
     authenticate,
     authorize([USER_ROLES.ADMIN]),
     validate({ body: stockVariantSchema }),
@@ -26,19 +26,48 @@ router.post(
 );
 
 router.patch(
-    '/:variantId',
+    '/variants/:variantId',
     authenticate,
     authorize([USER_ROLES.ADMIN]),
-    validate({ params: idParamSchema, body: stockVariantUpdateSchema }),
+    validate({ params: variantIdParamSchema, body: stockVariantUpdateSchema }),
     asyncHandler(updateStockVariantController)
 );
 
 router.delete(
-    '/:variantId',
+    '/variants/:variantId',
     authenticate,
     authorize([USER_ROLES.ADMIN]),
-    validate({ params: idParamSchema }),
+    validate({ params: variantIdParamSchema }),
     asyncHandler(deleteStockVariantController)
 );
+
+
+// STOCK
+
+// get stock available
+router.get(
+    '/',
+    authenticate,
+    authorize([USER_ROLES.ADMIN]),
+    asyncHandler(getStockController)
+);
+
+// add stock bought from donation 
+router.post(
+    '/',
+    authenticate,
+    authorize([USER_ROLES.ADMIN]),
+    validate({ body: stockSchema }),
+    asyncHandler(addStockController)
+);
+
+// update stock
+// router.patch(
+//     '/:stockId',
+//     authenticate,
+//     authorize([USER_ROLES.ADMIN]),
+//     validate({ params: idParamSchema, body: stockUpdateSchema }),
+//     asyncHandler(updateStockController)
+// );
 
 export default router;

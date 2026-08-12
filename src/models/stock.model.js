@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db";
-import { STOCK_TYPES } from "../constants/common";
+import { sequelize } from "../config/db.js";
+import { STOCK_TYPES } from "../constants/common.js";
 
 export const StockVariant = sequelize.define(
   "StockVariant",
@@ -13,7 +13,7 @@ export const StockVariant = sequelize.define(
     },
 
     type: {
-      type: DataTypes.ENUM(...Object.values(STOCK_TYPES)),
+      type: DataTypes.ENUM(Object.values(STOCK_TYPES)),
       allowNull: false,
       defaultValue: "SAPLING"
     },

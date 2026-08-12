@@ -1,6 +1,9 @@
-import { STOCK_TYPES } from "../../constants/common";
+import z from "zod";
+import { STOCK_TYPES } from "../../constants/common.js";
 
-export const idParamSchema = z.object({
+// Stock variant
+
+export const variantIdParamSchema = z.object({
     variantId: z.uuidv4(),
 });
 
@@ -15,6 +18,35 @@ export const stockVariantSchema = z.object({
 });
 
 export const stockVariantUpdateSchema = stockVariantSchema.partial();
+
+
+// Stock
+
+export const idParamSchema = z.object({
+    stockId: z.uuidv4(),
+});
+
+export const stockSchema = z.object({
+    donationId: z.uuidv4(),
+
+    amount: z.number().positive().optional(),
+    
+    variantId: z.uuidv4(),
+    
+    quantity: z.number().positive().optional(),
+});
+
+export const stockUpdateSchema = z.object({
+    variantId: z.uuidv4().optional(),
+    
+    amount: z.number().positive().optional(),
+
+    quantity: z.number().positive().optional(),
+});
+
+
+
+
 
 // export const stockLogsQuerySchema = z.object({
 //     page: z.coerce.number().int().positive().default(1),

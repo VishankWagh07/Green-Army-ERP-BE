@@ -109,8 +109,8 @@ Plantation.associate = (models) => {
     });
 
     // Plantation has many watering locations
-    Plantation.hasMany(models.WateringLocation, {
+    Plantation.hasOne(models.WateringLocation, {
         foreignKey: "plantationId",
-        as: "wateringLocations",
+        as: "wateringLocation",
     });
 };
