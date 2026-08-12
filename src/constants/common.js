@@ -26,6 +26,11 @@ export const ATTENDANCE_STATUS = {
     "Weekly Off": 'Weekly Off',
 }
 
+export const PAYMENT_STATUS = {
+    Pending: "Pending",
+    Completed: "Completed"
+}
+
 export const PRIVILEGED_ROLES = [USER_ROLES.ADMIN, USER_ROLES.TEAM_MANAGER];
 
 export const PAYMENT_STATUS = {

@@ -24,6 +24,8 @@ export const updateUser = async (userId, payload) => {
     if (!user) throw ApiError.notFound('User not found');
 
     await user.update(payload);
+
+    return user;
 }
 
 export const deleteUser = async (userId) => {
@@ -36,4 +38,6 @@ export const deleteUser = async (userId) => {
     }, {
         where: { userId }
     });
+
+    return user;
 }
