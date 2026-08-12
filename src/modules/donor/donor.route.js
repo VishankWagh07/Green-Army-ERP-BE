@@ -3,7 +3,7 @@ import asyncHandler from "../../middlewares/asyncHandler.js";
 import { validate } from "../../middlewares/validate.js";
 import { authenticate, authorize } from "../../middlewares/auth.js";
 import { USER_ROLES } from "../../constants/auth.js";
-import { donorDonationIdSchema, donorIdSchema, donationFilterSchema, postDonationSchema, postDonorSchema, putDonationSchema, putDonorSchema, donorFilterSchema } from "./donor.schema.js";
+import { donorDonationIdSchema, donorIdSchema, donationFilterSchema, postDonationSchema, postDonorSchema, putDonationSchema, putDonorSchema, donorFilterSchema, donorIdOptionalSchema } from "./donor.schema.js";
 import { addDonationController, createDonorController, deleteDonationController, deleteDonorController, getDonationsController, getDonorsController, updateDonationController, updateDonorController } from "./donor.controller.js";
 
 const router = express.Router();
@@ -25,7 +25,7 @@ router.delete("/:donorId", validate({ params: donorIdSchema }), asyncHandler(del
 
 router.post("/:donorId/donations", validate({ params: donorIdSchema, body: postDonationSchema }), asyncHandler(addDonationController));
 
-router.get("/:donorId/donations", validate({ params: donorIdSchema, query: donationFilterSchema }), asyncHandler(getDonationsController));
+router.get("/:donorId/donations", validate({ params: donorIdOptionalSchema, query: donationFilterSchema }), asyncHandler(getDonationsController));
 
 router.patch("/:donorId/donations/:donationId", validate({ params: donorDonationIdSchema, body: putDonationSchema }), asyncHandler(updateDonationController));
 

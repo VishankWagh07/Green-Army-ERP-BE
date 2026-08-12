@@ -25,7 +25,7 @@ export const getTeams = async (payload) => {
 
   let where = { isActive: parsedIsActive };
 
-  if (teamId.trim()) {
+  if (teamId?.trim()) {
     const trimmedTeamId = teamId.trim();
     const result = z.uuidv4().safeParse(trimmedTeamId);
 

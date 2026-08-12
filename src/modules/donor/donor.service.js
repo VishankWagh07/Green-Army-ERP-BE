@@ -62,17 +62,13 @@ export const getDonors = async (payload) => {
     raw: true,
   });
 
-
   // -----------------------------
   // Get all donations in ONE query
   // -----------------------------
   const donorIds = donors.map((donor) => donor.donorId);
 
   const donationTotals = await Donation.findAll({
-    attributes: [
-      "donorId",
-      [fn("SUM", col("amount")), "totalDonationAmt"],
-    ],
+    attributes: ["donorId", [fn("SUM", col("amount")), "totalDonationAmt"]],
     where: {
       donorId: {
         [Op.in]: donorIds,
@@ -89,7 +85,7 @@ export const getDonors = async (payload) => {
     donationTotals.map((item) => [
       item.donorId,
       Number(item.totalDonationAmt || 0),
-    ])
+    ]),
   );
 
   // -----------------------------
@@ -104,58 +100,27 @@ export const getDonors = async (payload) => {
   // Apply donationGte
   // -----------------------------
   if (donationGte) {
-    result = result.filter(
-      (donor) => donor.totalDonationAmt >= donationGte
-    );
+    result = result.filter((donor) => donor.totalDonationAmt >= donationGte);
   }
 
   return result;
 };
 
 export const updateDonor = async (payload) => {
-  const {
-    donorId,
-    fullName,
+  const { donorId, fullName } = payload;
+
+  if (fullName) {
+    await checkDonorNameExists(fullName);
+  }
+
+  let updates = {
     mobileNumber,
     address,
     panNumber,
     dateOfBirth,
     anniversaryDate,
     assignedUserId,
-    treeGuardsProvided,
-    saplingsProvided,
-  } = payload;
-
-  let updates = {};
-
-  if (fullName) {
-    await checkDonorNameExists(fullName);
-    updates.fullName = fullName;
-  }
-  if (mobileNumber) {
-    updates.mobileNumber = mobileNumber;
-  }
-  if (address) {
-    updates.address = address;
-  }
-  if (panNumber) {
-    updates.panNumber = panNumber;
-  }
-  if (dateOfBirth) {
-    updates.dateOfBirth = dateOfBirth;
-  }
-  if (anniversaryDate) {
-    updates.anniversaryDate = anniversaryDate;
-  }
-  if (assignedUserId) {
-    updates.assignedUserId = assignedUserId;
-  }
-  if (treeGuardsProvided) {
-    updates.treeGuardsProvided = treeGuardsProvided;
-  }
-  if (saplingsProvided) {
-    updates.saplingsProvided = saplingsProvided;
-  }
+  };
 
   let where = { donorId };
 
@@ -173,14 +138,15 @@ export const deleteDonor = async (payload) => {
 // DONATIONS
 
 export const addDonation = async (payload) => {
-  const {
-    donorId,
+  const { 
+    donorId, 
     amount,
     donationDate,
+    
     stickersPrepared,
     paymentMode,
-    paymentStatus,
-  } = payload;
+    paymentStatus
+   } = payload;
 
   await checkDonorExists(donorId);
 
@@ -189,28 +155,24 @@ export const addDonation = async (payload) => {
     amount,
     availableAmount: amount,
     donationDate,
+    stickersPrepared,
+    paymentMode,
+    paymentStatus,
   };
-
-  if (stickersPrepared) {
-    createData.stickersPrepared = stickersPrepared;
-  }
-  if (paymentMode) {
-    createData.paymentMode = paymentMode;
-  }
-  if (paymentStatus) {
-    createData.paymentStatus = paymentStatus;
-  }
 
   return await Donation.create(createData);
 };
 
 export const getDonations = async ({ donorId, from, to }) => {
   let where = {
-    donorId,
     donationDate: {
       [Op.between]: [new Date(from), new Date(to)],
     },
   };
+
+  if (donorId) {
+    where.donorId = donorId;
+  }
 
   // Run both queries simultaneously for better performance
   const [donations, totalDonationAmt] = await Promise.all([
@@ -243,23 +205,10 @@ export const updateDonation = async (payload) => {
   const updates = {
     amount,
     donationDate,
+    stickersPrepared,
+    paymentMode,
+    paymentStatus,
   };
-
-  if (amount) {
-    updates.amount = amount;
-  }
-  if (donationDate) {
-    updates.donationDate = donationDate;
-  }
-  if (stickersPrepared) {
-    updates.stickersPrepared = stickersPrepared;
-  }
-  if (paymentMode) {
-    updates.paymentMode = paymentMode;
-  }
-  if (paymentStatus) {
-    updates.paymentStatus = paymentStatus;
-  }
 
   return await Donation.update(updates, { where });
 };

@@ -14,6 +14,7 @@ import userRoutes from "./modules/user/user.route.js";
 import employeeRoutes from "./modules/employee/employee.route.js";
 import teamRoutes from "./modules/team/team.route.js";
 import donorRoutes from "./modules/donor/donor.route.js";
+import wateringRoutes from "./modules/watering/watering.route.js";
 import stockRoutes from "./modules/stock/stock.route.js";
 import { uploadDirectory } from "./middlewares/upload.js";
 
@@ -45,6 +46,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/teams', teamRoutes);
 app.use('/api/v1/donors', donorRoutes);
+app.use('/api/v1/watering', wateringRoutes);
 app.use('/api/v1/photos', photoRoutes);
 app.use('/api/v1/employees', employeeRoutes);
 app.use('/api/v1/stock', stockRoutes);
