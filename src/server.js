@@ -13,6 +13,7 @@ import photoRoutes from "./modules/photo/photo.route.js";
 import userRoutes from "./modules/user/user.route.js";
 import employeeRoutes from "./modules/employee/employee.route.js";
 import teamRoutes from "./modules/team/team.route.js";
+import donorRoutes from "./modules/donor/donor.route.js";
 import { uploadDirectory } from "./middlewares/upload.js";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/uploads', express.static(uploadDirectory));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/teams', teamRoutes);
+app.use('/api/v1/donors', donorRoutes);
 app.use('/api/v1/photos', photoRoutes);
 app.use('/api/v1/employees', employeeRoutes);
 
