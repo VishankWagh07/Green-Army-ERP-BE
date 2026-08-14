@@ -28,6 +28,11 @@ export const Plantation = sequelize.define(
             allowNull: false,
         },
 
+        location: {
+            type: DataTypes.GEOMETRY("POINT", 4326),
+            allowNull: false,
+        },
+
         description: {
             type: DataTypes.STRING(500),
             allowNull: true,
@@ -40,12 +45,12 @@ export const Plantation = sequelize.define(
 
         donorId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            allowNull: false,
         },
 
         donationId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            allowNull: false,
         },
 
         treesPlanted: {

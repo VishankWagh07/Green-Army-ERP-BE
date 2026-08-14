@@ -3,8 +3,8 @@ import { USER_ROLES } from "../../constants/auth.js";
 import { authenticate, authorize } from "../../middlewares/auth.js";
 import asyncHandler from "../../middlewares/asyncHandler.js";
 import { validate } from "../../middlewares/validate.js";
-import { idParamSchema, stockSchema, stockUpdateSchema, stockVariantSchema, stockVariantUpdateSchema, variantIdParamSchema } from "./stock.schema.js";
-import { addStockController, addStockVariantController, deleteStockVariantController, getStockController, getStockVariantsController, updateStockController, updateStockVariantController } from "./stock.controller.js";
+import { idParamSchema, stockSchema, stockVariantSchema, stockVariantUpdateSchema, variantIdParamSchema } from "./stock.schema.js";
+import { addStockController, addStockVariantController, deleteStockVariantController, getStockController, getStockVariantsController, updateStockVariantController } from "./stock.controller.js";
 
 const router = express.Router();
 

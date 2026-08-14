@@ -33,7 +33,7 @@ export const stockSchema = z.object({
     
     variantId: z.uuidv4(),
     
-    quantity: z.number().positive().optional(),
+    quantityBought: z.number().positive().optional(),
 });
 
 export const stockUpdateSchema = z.object({

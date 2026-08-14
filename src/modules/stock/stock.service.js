@@ -59,6 +59,7 @@ export const addStock = async (payload) => {
 
     const stock =  await sequelize.transaction(async t => {
         // Create stock
+        payload.quantityAvailable = payload.quantityBought;
         const stock = await Stock.create(payload, {transaction:t});
 
         const stockVariant = await StockVariant.findByPk(stock.variantId);
@@ -66,7 +67,7 @@ export const addStock = async (payload) => {
         // Update donation available amount
         if(donation.availableAmount < stock.amount) throw ApiError.badRequest("Insufficient Donation Funds");
         donation.availableAmount -= stock.amount;
-        await donation.save({transaction:t})
+        await donation.save({transaction:t});
 
         // Update Donor sappling & guards provided
         if(stockVariant.type === STOCK_TYPES.SAPLING) donor.saplingsProvided += stock.quantity;
@@ -79,39 +80,51 @@ export const addStock = async (payload) => {
     return stock;
 }
 
-export const updateStock = async (stockId, payload) => {
-    return await sequelize.transaction(async t => {
-        const stock = await Stock.findByPk(stockId);
-        if (!stock) throw ApiError.notFound('Stock Not Found');
-
-        const stockVariant = await StockVariant.findByPk(stock.variantId);
-        if (!stockVariant) throw ApiError.notFound('StockVariant Not Found');
-        
-        const donation = await Donation.findByPk(stock.donationId);
-        if (!donation) throw ApiError.notFound('Donation Not Found');
+export const deductStockQty = async (stockId, qtyToDeduct, transaction) => {
+    const stock = await Stock.findByPk(stockId);
     
-        if(payload.quantity != null){// qty -> donor qty upd 
-            const donor = await Donor.findByPk(donation.donorId);
-            if (!donor) throw ApiError.notFound("Donor Not Found");
-            const qtyToBeAdded = payload.quantity - stock.quantity;
-            
-            if(stockVariant.type === STOCK_TYPES.SAPLING) donor.saplingsProvided += qtyToBeAdded;
-            else if(stockVariant.type === STOCK_TYPES.GUARD) donor.treeGuardsProvided += qtyToBeAdded;
-            await donor.save({transaction:t});
-        }
-        
-        if(payload.amount != null){// amt -> donation avl amt
-            const amtToBeAdded = payload.amount - stock.amount;
+    if(!stock) throw ApiError.notFound("Stock Not found");
 
-            donation.availableAmount += amtToBeAdded;
-            await donation.save({transaction:t});
-        }
+    if(stock.quantityAvailable < qtyToDeduct) throw ApiError.badRequest("Insufficient quantity");
+    stock.quantityAvailable -= qtyToDeduct;
 
-        await stock.update(payload,{transaction:t});
-
-        return stock;
-    })
+    if(transaction) return await stock.save({transaction});
+    await stock.save();
 }
+
+// export const updateStock = async (stockId, payload) => {
+//     return await sequelize.transaction(async t => {
+//         const stock = await Stock.findByPk(stockId);
+//         if (!stock) throw ApiError.notFound('Stock Not Found');
+
+//         const stockVariant = await StockVariant.findByPk(stock.variantId);
+//         if (!stockVariant) throw ApiError.notFound('StockVariant Not Found');
+        
+//         const donation = await Donation.findByPk(stock.donationId);
+//         if (!donation) throw ApiError.notFound('Donation Not Found');
+    
+//         if(payload.quantity != null){// qty -> donor qty upd 
+//             const donor = await Donor.findByPk(donation.donorId);
+//             if (!donor) throw ApiError.notFound("Donor Not Found");
+//             const qtyToBeAdded = payload.quantity - stock.quantity;
+            
+//             if(stockVariant.type === STOCK_TYPES.SAPLING) donor.saplingsProvided += qtyToBeAdded;
+//             else if(stockVariant.type === STOCK_TYPES.GUARD) donor.treeGuardsProvided += qtyToBeAdded;
+//             await donor.save({transaction:t});
+//         }
+        
+//         if(payload.amount != null){// amt -> donation avl amt
+//             const amtToBeAdded = payload.amount - stock.amount;
+
+//             donation.availableAmount += amtToBeAdded;
+//             await donation.save({transaction:t});
+//         }
+
+//         await stock.update(payload,{transaction:t});
+
+//         return stock;
+//     })
+// }
 
 export const deleteStock = async (stockId) => {
     const stock = await Stock.findByPk(stockId);

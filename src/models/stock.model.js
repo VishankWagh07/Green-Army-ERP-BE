@@ -75,7 +75,12 @@ export const Stock = sequelize.define(
       allowNull: false,
     },
 
-    quantity: {
+    quantityBought: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    quantityAvailable: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
