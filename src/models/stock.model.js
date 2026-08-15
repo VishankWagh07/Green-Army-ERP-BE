@@ -75,7 +75,12 @@ export const Stock = sequelize.define(
       allowNull: false,
     },
 
-    quantity: {
+    quantityBought: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    quantityAvailable: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -122,11 +127,6 @@ export const PlantationStockUsage = sequelize.define(
 
     stockId: {
       type: DataTypes.UUID,
-      allowNull: false,
-    },
-
-    amount: {
-      type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
     },
 

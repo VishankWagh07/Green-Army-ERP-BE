@@ -29,20 +29,20 @@ export const idParamSchema = z.object({
 export const stockSchema = z.object({
     donationId: z.uuidv4(),
 
-    amount: z.number().positive().optional(),
+    amount: z.number().positive(),
     
     variantId: z.uuidv4(),
     
-    quantity: z.number().positive().optional(),
+    quantityBought: z.number().positive(),
 });
 
 export const stockUpdateSchema = z.object({
-    variantId: z.uuidv4().optional(),
+    variantId: z.uuidv4(),
     
-    amount: z.number().positive().optional(),
+    amount: z.number().positive(),
 
-    quantity: z.number().positive().optional(),
-});
+    quantity: z.number().positive(),
+}).partial();
 
 
 

@@ -1,5 +1,5 @@
 import { sendSuccess } from "../../utils/ApiResponse.js";
-import { addStock, addStockVariant, deleteStockVariant, getStock, getStockVariants, updateStock, updateStockVariant } from "./stock.service.js";
+import { addStock, addStockVariant, deleteStockVariant, getStock, getStockVariants, updateStockVariant } from "./stock.service.js";
 
 // STOCK_VARIANT
 
@@ -43,7 +43,7 @@ export const addStockController = async (req, res) => {
 }
 
 // update stock controller
-export const updateStockController = async (req, res) => {
-    const stock = await updateStock(req.params.stockId, req.body);
-    sendSuccess(res, { data: stock });
-}
+// export const updateStockController = async (req, res) => {
+//     const stock = await updateStock(req.params.stockId, req.body);
+//     sendSuccess(res, { data: stock });
+// }
