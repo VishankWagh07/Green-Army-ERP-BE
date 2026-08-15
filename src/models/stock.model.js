@@ -130,11 +130,6 @@ export const PlantationStockUsage = sequelize.define(
       allowNull: false,
     },
 
-    amount: {
-      type: DataTypes.DECIMAL(12, 2),
-      allowNull: false,
-    },
-
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,

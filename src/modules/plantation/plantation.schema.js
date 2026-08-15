@@ -1,7 +1,7 @@
 import z from "zod";
-import { STOCK_TYPES } from "../../constants/common";
+import { STOCK_TYPES } from "../../constants/common.js";
 
-export const plantationIdParamSchema = z.object({
+export const idParamSchema = z.object({
   plantationId: z.uuidv4(),
 });
 
@@ -11,9 +11,9 @@ export const plantationSchema = z.object({
 
     locationName: z.string().trim().min(1, "locationName is required").max(150, "locationName must not exceed 150 characters"),
 
-    latitude: z.number().min(-90).max(90),
+    latitude: z.coerce.number().min(-90).max(90),
 
-    longitude: z.number().min(-180).max(180),
+    longitude: z.coerce.number().min(-180).max(180),
 
     googleMapLink: z.string().trim().min(1, "googleMapLink is required").max(255, "googleMapLink must not exceed 255 characters"),
 
@@ -34,7 +34,7 @@ export const plantationSchema = z.object({
 
       variantType: z.enum(Object.values(STOCK_TYPES)),
 
-      quantityUsed: z.number().positive().optional(),
+      quantityUsed: z.coerce.number().positive().optional(),
     })
   ),
 })

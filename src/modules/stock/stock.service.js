@@ -51,6 +51,8 @@ export const getStock = async () => {
 }
 
 export const addStock = async (payload) => {
+    console.log("stk ad",payload);
+    
     // donation avl amt, donor prvd upd, stk crt
     const donation = await Donation.findByPk(payload.donationId);
     if(!donation) throw ApiError.notFound("Donation Not found");
@@ -70,8 +72,8 @@ export const addStock = async (payload) => {
         await donation.save({transaction:t});
 
         // Update Donor sappling & guards provided
-        if(stockVariant.type === STOCK_TYPES.SAPLING) donor.saplingsProvided += stock.quantity;
-        else if(stockVariant.type === STOCK_TYPES.GUARD) donor.treeGuardsProvided += stock.quantity;
+        if(stockVariant.type === STOCK_TYPES.SAPLING) donor.saplingsProvided += stock.quantityBought;
+        else if(stockVariant.type === STOCK_TYPES.GUARD) donor.treeGuardsProvided += stock.quantityBought;
         await donor.save({transaction:t});
 
         return stock;

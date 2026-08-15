@@ -4,8 +4,8 @@ import { authenticate, authorize } from "../../middlewares/auth.js";
 import asyncHandler from "../../middlewares/asyncHandler.js";
 import { validate } from "../../middlewares/validate.js";
 import { addPlantationController, deletePlantationController, getPlantationsController, updatePlantationController } from "./plantation.controller.js";
-import { idParamSchema } from "../stock/stock.schema.js";
-import { plantationSchema, plantationUpdateSchema } from "./plantation.scema.js";
+import { idParamSchema, plantationSchema, plantationUpdateSchema } from "./plantation.schema.js";
+import { USER_ROLES } from "../../constants/auth.js";
 
 const router = express.Router();
 

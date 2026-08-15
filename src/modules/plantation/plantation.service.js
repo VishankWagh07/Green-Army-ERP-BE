@@ -7,7 +7,15 @@ import { ApiError } from "../../utils/ApiError.js";
 import { deductStockQty } from "../stock/stock.service.js";
 
 export const getPlantations = async () => {
-    const plantations = await Plantation.findAll();
+    const plantations = await Plantation.findAll({
+        attributes: {
+            include: [
+                [sequelize.literal('location.Long'), 'longitude'],
+                [sequelize.literal('location.Lat'), 'latitude']
+            ],
+            exclude: ['location']
+        }
+    });
 
     return plantations;
 }
@@ -19,7 +27,7 @@ export const addPlantation = async (payload) => {
         // TreesPlanted & TreeGuards
         let treesPlanted = 0;
         let treeGuards = 0;
-        for (stock of stockUsed) {
+        for (const stock of stockUsed) {
             if (stock.variantType === STOCK_TYPES.SAPLING) treesPlanted += stock.quantityUsed;
             if (stock.variantType === STOCK_TYPES.GUARD) treeGuards += stock.quantityUsed;
         }
@@ -35,7 +43,7 @@ export const addPlantation = async (payload) => {
             ),
         }, { transaction: t });
 
-        for (stock of stockUsed) {
+        for (const stock of stockUsed) {
             // deduct used stock quantity
             await deductStockQty(stock.stockId, stock.quantityUsed, t);
 
@@ -60,11 +68,16 @@ export const updatePlantation = async (variantId, payload) => {
 
     const { latitude, longitude, ...remPayload } = payload;
 
+    const locationObj = {};
+    if(latitude!==undefined && longitude!==undefined){
+        locationObj.location = sequelize.literal(
+            `geography::Point(${latitude}, ${longitude}, 4326)`
+        );
+    } 
+
     await plantation.update({
         ...remPayload,
-        location: sequelize.literal(
-            `geography::Point(${latitude}, ${longitude}, 4326)`
-        ),
+        ...locationObj
     });
 
     return plantation;
