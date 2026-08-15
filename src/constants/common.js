@@ -38,5 +38,16 @@ export const PLANTATION_STATUS = {
     Completed: "Completed"
 }
 
+export const REPORT_WISE = {
+    TEAM_WISE: "TEAM_WISE",
+    DONOR_WISE: "DONOR_WISE",
+    AREA_WISE: "AREA_WISE",
+}
+
+export const RADIUS_ENTITIES = {
+    PLANTATION: "PLANTATION",
+    WATERING: "WATERING",
+}
+
 export const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 export const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
