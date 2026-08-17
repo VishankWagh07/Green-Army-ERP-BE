@@ -29,14 +29,16 @@ export const EmployeeDailyLog = sequelize.define(
       allowNull: false,
     },
 
-    googleMapLink: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
     location: {
       type: DataTypes.GEOMETRY("POINT", 4326),
       allowNull: false,
     },
+
+    googleMapLink: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+
     description: {
       type: DataTypes.STRING(500),
       allowNull: true,

@@ -23,6 +23,11 @@ export const Plantation = sequelize.define(
             allowNull: false,
         },
 
+        location: {
+            type: DataTypes.GEOMETRY("POINT", 4326),
+            allowNull: false,
+        },
+
         googleMapLink: {
             type: DataTypes.STRING(255),
             allowNull: false,

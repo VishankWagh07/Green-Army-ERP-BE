@@ -6,8 +6,6 @@ import { Plantation } from "./plantation.model.js";
 import { Team } from "./team.model.js";
 import { WateringLocation, WateringSchedule } from "./watering.model.js";
 
-import { sequelize } from "../config/db.js";
-
 
 // 2. Put EVERY model inside this registry object
 const models = {
@@ -32,4 +30,18 @@ Object.keys(models).forEach((modelName) => {
 });
 
 // 4. Export them centrally for your app to use
-export { sequelize, models };
+// module.exports = models;
+
+export {
+  User,
+  Session,
+  Donor,
+  Donation,
+  WateringLocation,
+  WateringSchedule,
+  Team,
+  Plantation,
+  EmployeeDailyLog,
+  Attendance,
+  Photo,
+}

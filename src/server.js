@@ -17,6 +17,7 @@ import donorRoutes from "./modules/donor/donor.route.js";
 import wateringRoutes from "./modules/watering/watering.route.js";
 import stockRoutes from "./modules/stock/stock.route.js";
 import plantationRoutes from "./modules/plantation/plantation.route.js";
+import reportRoutes from "./modules/report/report.route.js";
 import { uploadDirectory } from "./middlewares/upload.js";
 import { dailyScheduler } from "./services/scheduler.js";
 
@@ -55,6 +56,7 @@ app.use("/api/v1/photos", photoRoutes);
 app.use("/api/v1/employees", employeeRoutes);
 app.use("/api/v1/stock", stockRoutes);
 app.use('/api/v1/plantation', plantationRoutes);
+app.use('/api/v1/reports', reportRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

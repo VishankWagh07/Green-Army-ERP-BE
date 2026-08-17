@@ -1,14 +1,11 @@
 import { Op, Sequelize } from "sequelize";
 import { ApiError } from "../../utils/ApiError.js";
-import { models, sequelize } from "../../models/index.js";
+import {Plantation, WateringLocation, WateringSchedule} from "../../models/index.js";
 // import {
 //   WateringLocation,
 //   WateringSchedule,
 // } from "../../models/watering.model.js";
-import { Plantation } from "../../models/plantation.model.js";
 import { getUserById } from "../user/user.service.js";
-
-const { WateringLocation, WateringSchedule } = models;
 
 const checkPlantationExists = async (plantationId) => {
   const plantationExists = await Plantation.findByPk(plantationId);
