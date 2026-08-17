@@ -18,6 +18,7 @@ import wateringRoutes from "./modules/watering/watering.route.js";
 import stockRoutes from "./modules/stock/stock.route.js";
 import plantationRoutes from "./modules/plantation/plantation.route.js";
 import { uploadDirectory } from "./middlewares/upload.js";
+import { dailyScheduler } from "./services/scheduler.js";
 
 const app = express();
 
@@ -26,37 +27,41 @@ const PORT = env.SERVER_PORT || 5050;
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(session({
-    store:sessionStore,
+app.use(
+  session({
+    store: sessionStore,
     secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     rolling: true, // Crucial: Resets the 7-day idle cookie on every user request
     cookie: {
-        httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: SEVEN_DAYS // rolling refreshes the cookie for each request
-    }
-}))
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: SEVEN_DAYS, // rolling refreshes the cookie for each request
+    },
+  }),
+);
 
 // An uploaded photo is publicly available at `/uploads/...`
-app.use('/uploads', express.static(uploadDirectory));
+app.use("/uploads", express.static(uploadDirectory));
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/teams', teamRoutes);
-app.use('/api/v1/donors', donorRoutes);
-app.use('/api/v1/watering', wateringRoutes);
-app.use('/api/v1/photos', photoRoutes);
-app.use('/api/v1/employees', employeeRoutes);
-app.use('/api/v1/stock', stockRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/teams", teamRoutes);
+app.use("/api/v1/donors", donorRoutes);
+app.use("/api/v1/watering", wateringRoutes);
+app.use("/api/v1/photos", photoRoutes);
+app.use("/api/v1/employees", employeeRoutes);
+app.use("/api/v1/stock", stockRoutes);
 app.use('/api/v1/plantation', plantationRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-    connectDb();
-    console.log("Server running on port:", PORT);
-})
+app.listen(PORT, async () => {
+  console.log("Server running on port:", PORT);
+  connectDb();
+  dailyScheduler();
+//   sendMail({to: 'vishank01.monarch@gmail.com', subject: 'Hello', html: `"Hello world \n testing email"`});
+});

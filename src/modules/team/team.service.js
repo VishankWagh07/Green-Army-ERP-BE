@@ -1,3 +1,4 @@
+import { User } from "../../models/auth.model.js";
 import { Team } from "../../models/team.model.js";
 import { ApiError } from "../../utils/ApiError.js";
 import z from "zod";
@@ -39,6 +40,25 @@ export const getTeams = async (payload) => {
   }
 
   return await Team.findAll({ where });
+};
+
+export const getTeamMembers = async (payload) => {
+  const { teamId } = payload;
+
+  let where = {
+    isActive: true,
+    teamId,
+  };
+
+  return await User.findAll({
+    where,
+    include: [
+      {
+        model: Team,
+        as: "team",
+      },
+    ],
+  });
 };
 
 export const updateTeam = async (payload) => {

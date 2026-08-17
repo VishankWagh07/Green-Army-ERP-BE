@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import z from 'zod';
+import dotenv from "dotenv";
+import z from "zod";
 
 dotenv.config();
 
@@ -7,7 +7,9 @@ dotenv.config();
 // mysteriously later at the first DB query or token sign attempt.
 const envSchema = z.object({
   SERVER_PORT: z.coerce.number().default(5000),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
 
   DB_SERVER: z.string().min(1),
   DB_SERVER_INSTANCE: z.string().min(1),
@@ -21,20 +23,29 @@ const envSchema = z.object({
   JWT_ACCESS_SECRET: z.string().min(16),
   JWT_REFRESH_SECRET: z.string().min(16),
   SESSION_SECRET: z.string().min(16),
-  JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
+  JWT_ACCESS_EXPIRES_IN: z.string().default("15m"),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
 
-  CORS_ORIGIN: z.string().default('*'),
+  CORS_ORIGIN: z.string().default("*"),
 
-  UPLOAD_DIR: z.string().default('uploads'),
+  UPLOAD_DIR: z.string().default("uploads"),
   MAX_UPLOAD_SIZE_MB: z.coerce.number().default(5),
+
+  WATERING_REMINDER_TIME: z.string().min(5).max(8),
+  BIRTH_ANNIV_REMINDER_TIME: z.string().min(5).max(8),
+
+  GMAIL_USER: z.email(),
+  GMAIL_PASS: z.string().min(5),
 });
 
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
   // eslint-disable-next-line no-console
-  console.error('Invalid environment configuration:', parsed.error.flatten().fieldErrors);
+  console.error(
+    "Invalid environment configuration:",
+    parsed.error.flatten().fieldErrors,
+  );
   process.exit(1);
 }
 

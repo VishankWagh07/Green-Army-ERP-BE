@@ -1,4 +1,4 @@
-// src/models/plantation.model.js
+  // src/models/plantation.model.js
 
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";

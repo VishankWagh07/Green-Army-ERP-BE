@@ -54,15 +54,24 @@ export const WateringSchedule = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    location: {
+      type: DataTypes.GEOMETRY("POINT", 4326),
+      allowNull: false,
+    },
+    locationName: {
+      type: DataTypes.STRING(150),
+      allowNull: false,
+    },
+    googleMapLink: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
     scheduledDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
     assignedUserId: {
       type: DataTypes.UUID,
-    },
-    reminderTime: {
-      type: DataTypes.TIME,
     },
     isCompleted: {
       type: DataTypes.BOOLEAN,
@@ -83,8 +92,7 @@ export const WateringSchedule = sequelize.define(
   },
 );
 
-
-WateringSchedule.associate = (models) => {  
+WateringSchedule.associate = (models) => {
   WateringSchedule.belongsTo(models.WateringLocation, {
     foreignKey: "wateringLocationId",
     as: "wateringLocation",
@@ -94,15 +102,3 @@ WateringSchedule.associate = (models) => {
     as: "assignedUser",
   });
 };
-//   const models = {
-//     WateringLocation,
-//     WateringSchedule,
-//   };
-
-// // 2. Loop through the object and execute associate methods
-// Object.keys(models).forEach((modelName) => {
-//   if (models[modelName].associate) {
-//     models[modelName].associate(models);
-//   }
-// });
-

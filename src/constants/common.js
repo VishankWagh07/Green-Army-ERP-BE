@@ -28,11 +28,6 @@ export const ATTENDANCE_STATUS = {
 
 export const PRIVILEGED_ROLES = [USER_ROLES.ADMIN, USER_ROLES.TEAM_MANAGER];
 
-export const PAYMENT_STATUS = {
-    Pending: "Pending",
-    Completed: "Completed"
-}
-
 export const PLANTATION_STATUS = {
     Pending: "Pending",
     Completed: "Completed"
