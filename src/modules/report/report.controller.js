@@ -17,7 +17,7 @@ export const teamActivityController = async (req, res) => {
 // get team activity controller
 export const plantationReportController = async (req, res) => {
     const {reportWise} = req.query;
-    plantationReport = {};
+    let plantationReport = {};
 
     if(reportWise === REPORT_WISE.TEAM_WISE){
         plantationReport = await teamWisePlantation(req.query);

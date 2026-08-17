@@ -1,5 +1,5 @@
 import z from "zod";
-import { RADIUS_ENTITIES, REPORT_WISE } from "../../constants/common";
+import { RADIUS_ENTITIES, REPORT_WISE } from "../../constants/common.js";
 
 export const overallActivityQuerySchema = z.object({
     from: z.iso.date(),
@@ -26,7 +26,7 @@ export const radiusReportQuerySchema = z.object({
 
     distance: z.coerce.number(),
 
-    entities: z.array(z.enum(RADIUS_ENTITIES)).nonempty(),
+    entity: z.enum(RADIUS_ENTITIES),
 
     from: z.iso.date(),
 

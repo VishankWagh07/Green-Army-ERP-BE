@@ -45,6 +45,7 @@ export const REPORT_WISE = {
 }
 
 export const RADIUS_ENTITIES = {
+    ALL: "ALL",
     PLANTATION: "PLANTATION",
     WATERING: "WATERING",
 }
