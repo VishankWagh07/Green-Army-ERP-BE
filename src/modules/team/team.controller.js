@@ -2,6 +2,7 @@ import { sendSuccess } from "../../utils/ApiResponse.js";
 import {
   createTeam,
   deleteTeam,
+  getTeamMembers,
   getTeams,
   updateTeam,
 } from "./team.service.js";
@@ -18,6 +19,14 @@ export async function getTeamsController(req, res) {
   const { teamId, isActive } = req.query;
 
   const teams = await getTeams({ teamId, isActive });
+
+  sendSuccess(res, { statusCode: 200, data: { teams } });
+}
+
+export async function getTeamMembersController(req, res) {
+  const { teamId } = req.params;
+
+  const teams = await getTeamMembers({ teamId });
 
   sendSuccess(res, { statusCode: 200, data: { teams } });
 }

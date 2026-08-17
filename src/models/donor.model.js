@@ -15,6 +15,14 @@ export const Donor = sequelize.define(
       type: DataTypes.STRING(150),
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
     mobileNumber: {
       type: DataTypes.STRING(15),
     },

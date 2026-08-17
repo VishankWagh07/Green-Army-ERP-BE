@@ -8,7 +8,7 @@ import { addWateringLocationController, addWateringScheduleController, deleteWat
 
 const router = express.Router();
 
-router.use(authenticate, authorize([USER_ROLES.ADMIN]))
+router.use(authenticate, authorize([USER_ROLES.ADMIN, USER_ROLES.TEAM_MANAGER]))
 
 // Watering Location
 

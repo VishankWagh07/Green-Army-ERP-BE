@@ -22,6 +22,7 @@ export const createDonor = async (payload) => {
   const {
     fullName,
     mobileNumber,
+    email,
     address,
     panNumber,
     dateOfBirth, // 'YYYY-MM-DD'
@@ -33,21 +34,27 @@ export const createDonor = async (payload) => {
 
   await checkDonorNameExists(fullName);
 
-  return await Donor.create({
-    fullName,
-    mobileNumber,
-    address,
-    panNumber,
-    dateOfBirth, // 'YYYY-MM-DD'
-    anniversaryDate,
-    assignedUserId,
-    treeGuardsProvided: treeGuardsProvided ?? 0,
-    saplingsProvided: saplingsProvided ?? 0,
-  });
+  return await Donor.create(
+    {
+      fullName,
+      mobileNumber,
+      email,
+      address,
+      panNumber,
+      dateOfBirth, // 'YYYY-MM-DD'
+      anniversaryDate,
+      assignedUserId,
+      treeGuardsProvided: treeGuardsProvided ?? 0,
+      saplingsProvided: saplingsProvided ?? 0,
+    },
+    {
+      raw: true,
+    },
+  );
 };
 
 export const getDonors = async (payload) => {
-  const { donorId, isActive, donationGte } = payload;
+  const { donorId, isActive, donationGte, occasion } = payload;
 
   const parsedIsActive = isActive === undefined ? true : isActive === "true";
 
@@ -55,6 +62,19 @@ export const getDonors = async (payload) => {
 
   if (donorId) {
     where.donorId = donorId;
+  }
+
+  if (occasion) {
+    where[Op.and] = [
+      sequelize.where(
+        sequelize.fn("MONTH", sequelize.col(occasion.key)),
+        occasion.targetMonth,
+      ),
+      sequelize.where(
+        sequelize.fn("DAY", sequelize.col(occasion.key)),
+        occasion.targetDay,
+      ),
+    ];
   }
 
   let donors = await Donor.findAll({
@@ -106,8 +126,80 @@ export const getDonors = async (payload) => {
   return result;
 };
 
+export const getReminderDonors = async () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const targetMonth = tomorrow.getMonth() + 1;
+  const targetDay = tomorrow.getDate();
+
+  const birthDayDonors = await getDonors({
+    occasion: {
+      key: "dateOfBirth",
+      targetMonth,
+      targetDay,
+    },
+  });
+
+  const anniversaryDonors = await getDonors({
+    occasion: {
+      key: "anniversaryDate",
+      targetMonth,
+      targetDay,
+    },
+  });
+
+  // const birthDayDonors = await Donor.findAll({
+  //   where: {
+  //     isActive: true,
+  //     [Op.and]: [
+  //       sequelize.where(
+  //         sequelize.fn("MONTH", sequelize.col("dateOfBirth")),
+  //         targetMonth,
+  //       ),
+  //       sequelize.where(
+  //         sequelize.fn("DAY", sequelize.col("dateOfBirth")),
+  //         targetDay,
+  //       ),
+  //     ],
+  //   },
+  //   raw: true,
+  // });
+
+  // const anniversaryDonors = await Donor.findAll({
+  //   where: {
+  //     isActive: true,
+  //     [Op.and]: [
+  //       sequelize.where(
+  //         sequelize.fn("MONTH", sequelize.col("anniversaryDate")),
+  //         targetMonth,
+  //       ),
+  //       sequelize.where(
+  //         sequelize.fn("DAY", sequelize.col("anniversaryDate")),
+  //         targetDay,
+  //       ),
+  //     ],
+  //   },
+  //   raw: true,
+  // });
+
+  return {
+    birthDayDonors,
+    anniversaryDonors,
+  };
+};
+
 export const updateDonor = async (payload) => {
-  const { donorId, fullName } = payload;
+  const {
+    donorId,
+    fullName,
+    mobileNumber,
+    address,
+    panNumber,
+    dateOfBirth,
+    anniversaryDate,
+    assignedUserId,
+  } = payload;
 
   if (fullName) {
     await checkDonorNameExists(fullName);
@@ -138,15 +230,15 @@ export const deleteDonor = async (payload) => {
 // DONATIONS
 
 export const addDonation = async (payload) => {
-  const { 
-    donorId, 
+  const {
+    donorId,
     amount,
     donationDate,
-    
+
     stickersPrepared,
     paymentMode,
-    paymentStatus
-   } = payload;
+    paymentStatus,
+  } = payload;
 
   await checkDonorExists(donorId);
 

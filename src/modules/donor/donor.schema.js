@@ -7,6 +7,7 @@ export const postDonorSchema = z.object({
     .string()
     .regex(/^\d{10}$/, "Must be a 10-digit mobile number")
     .optional(),
+  email: z.string().trim().email("Please enter a valid email address").max(255),
   address: z.string().max(500).optional(),
   panNumber: z
     .string()
