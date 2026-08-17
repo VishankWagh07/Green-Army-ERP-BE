@@ -1,5 +1,5 @@
 import z from "zod";
-import { PAYMENT_STATUS, PLANTATION_STATUS } from "../../constants/common.js";
+import { PAYMENT_STATUS } from "../../constants/common.js";
 
 export const postDonorSchema = z.object({
   fullName: z.string().min(2).max(150),
