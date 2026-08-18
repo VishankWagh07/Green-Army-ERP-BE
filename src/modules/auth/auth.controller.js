@@ -38,11 +38,15 @@ const destroySession = (req) => {
   });
 };
 
+// user login -> if session exist -> 
+
 // login controller
 export const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const { user } = await login(email, password);
+    // if session of userId exist -> return error
+    // if replaceExisting session:true -> remove existing session -> create new
     await persistSession(req, user);
 
     return sendSuccess(res, { data: { user } });

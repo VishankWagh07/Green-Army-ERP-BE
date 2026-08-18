@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import session from "express-session";
+import swaggerUi from  "swagger-ui-express";
+import swaggerDocument from "../swagger-output.json" with { type: 'json' };
 
 import { connectDb } from "./config/db.js";
 import env from "./config/env.js";
@@ -58,8 +60,11 @@ app.use("/api/v1/stock", stockRoutes);
 app.use('/api/v1/plantation', plantationRoutes);
 app.use('/api/v1/reports', reportRoutes);
 
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use(notFoundHandler);
 app.use(errorHandler);
+
 
 app.listen(PORT, async () => {
   console.log("Server running on port:", PORT);
