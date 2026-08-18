@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { User } from "../../models/auth.model.js"
+import { Session, User } from "../../models/auth.model.js"
 import { ApiError } from "../../utils/ApiError.js";
 import env from "../../config/env.js";
 import { Op } from "sequelize";
@@ -54,6 +54,30 @@ export const register = async (payload) => {
         user: { userId: newUser.userId, fullName: newUser.fullName, email: newUser.email, role: newUser.role }
     }
 }
+
+export const findActiveUserSession = async (userId) => {
+    const now = new Date();
+
+    return Session.findOne({
+        where: {
+            userId,
+            expires: {
+                [Op.gt]: now,
+            },
+            absoluteExpiresAt: {
+                [Op.gt]: now,
+            },
+        },
+    });
+};
+
+export const destroyUserSession = async (userId) => {
+    await Session.destroy({
+        where: {
+            userId,
+        },
+    });
+};
 
 // export const refresh = async (refreshToken) => {
 //     let payload;

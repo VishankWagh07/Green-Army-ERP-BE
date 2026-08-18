@@ -1,7 +1,7 @@
 import { THIRTY_DAYS } from "../../constants/common.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { sendSuccess } from "../../utils/ApiResponse.js";
-import { login, register } from "./auth.service.js";
+import { destroyUserSession, findActiveUserSession, login, register } from "./auth.service.js";
 
 const persistSession = (req, user) => {
   return new Promise((resolve, reject) => {
@@ -15,8 +15,8 @@ const persistSession = (req, user) => {
 
       req.session.save((saveError) => {
         if (saveError) {
-          console.log("sv er",saveError);
-          
+          console.log("sv er", saveError);
+
           return reject(ApiError.internal("Failed to save session"));
         }
 
@@ -41,8 +41,19 @@ const destroySession = (req) => {
 // login controller
 export const loginController = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, replaceExistingSession } = req.body;
     const { user } = await login(email, password);
+
+    const existingSession = await findActiveUserSession(user.userId);
+
+    if (existingSession && !replaceExistingSession) {
+      throw ApiError.conflict("This user is already logged in on another device.");
+    }
+
+    if (existingSession && replaceExistingSession) {
+      await destroyUserSession(user.userId);
+    }
+
     await persistSession(req, user);
 
     return sendSuccess(res, { data: { user } });

@@ -6,7 +6,7 @@ import { User } from "../models/auth.model.js";
 export const authenticate = async (req, res, next) => {
   // no session / no userId
   if (!req.session?.userId) {
-    next(ApiError.unauthorized("Please log in first."));
+    return next(ApiError.unauthorized("Please log in first."));
   }
 
   try {
@@ -27,7 +27,7 @@ export const authenticate = async (req, res, next) => {
     // verify userId
     const user = await User.findByPk(req.session.userId);
 
-    if (!user) next(ApiError.notFound("User not found"));
+    if (!user) return next(ApiError.notFound("User not found"));
 
     req.user = { userId: user.userId, fullName: user.fullName, email: user.email, role: user.role };
 
